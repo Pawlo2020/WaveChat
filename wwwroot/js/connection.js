@@ -46,6 +46,7 @@ function instantiateToast(msg, name, last){
     textbox.value = '';
 }
 
+
 function instantiateFAKEToast(content) {
 
     var msg = JSON.parse(content);
@@ -124,4 +125,21 @@ function sendMessage(message) {
 
   function _init(){
     $('.toast').toast('show');
+    $("#sendForm").submit(function(e){
+        e.preventDefault();
+        
+        $.ajax({
+            url: "/Home/SendMessageT",
+            type: 'POST',
+            data: { value: $('#inlineFormInputName').val() },
+            success: function () {
+                $('#inlineFormInputName').val('')
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+        return false;
+    });
+    Load();
   }

@@ -123,16 +123,20 @@ namespace WaveChat.Controllers
         public async void InstantiateToast(MessageModel model)
         {
             //Serialize
-            var first = await firebaseClient.Child("users/" + model.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
-            ToastMessage _initToast = new ToastMessage
+            if (!(model is null))
             {
-                Message = model.Message,
-                Timestamp = model.Timestamp,
-                FirstName = first.First().Object.FirstName,
-                LastName = first.First().Object.LastName
-        };
-            string output = JsonConvert.SerializeObject(_initToast);
-            await _notificationsMessageHandler.SendMessageToFirst(output);
+                var first = await firebaseClient.Child("users/" + model.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
+
+                ToastMessage _initToast = new ToastMessage
+                {
+                    Message = model.Message,
+                    Timestamp = model.Timestamp,
+                    FirstName = first.First().Object.FirstName,
+                    LastName = first.First().Object.LastName
+                };
+                string output = JsonConvert.SerializeObject(_initToast);
+                await _notificationsMessageHandler.SendMessageToFirst(output);
+            }
         }
         struct ToastMessage
         {
@@ -147,16 +151,19 @@ namespace WaveChat.Controllers
         
 
         [HttpPost]
-        public void SendMessage(ChatModel msg)
+        public void SendMessageT(string value)
         {
-            
-            msg.MessageModel.Timestamp = DateTime.Now.ToString();
-            Console.WriteLine(msg.MessageModel.Message);
+
+            MessageModel msg = new MessageModel();
+            msg.Message = value;
+            msg.Timestamp = DateTime.Now.ToString();
+            Console.WriteLine(msg.Message);
             var user = GetCurrentUserAsync();
-            msg.MessageModel.GUID = user.Result.FirebaseGUID;
+            msg.GUID = user.Result.FirebaseGUID;
 
             var resultDatabase = firebaseClient
-                      .Child("msgs/").PostAsync(msg.MessageModel);
+                      .Child("msgs/").PostAsync(msg);
+
 
         }
             Task<WaveChat.Areas.Identity.Data.WaveChatUser> GetCurrentUserAsync() => _userManager.GetUserAsync(User);
