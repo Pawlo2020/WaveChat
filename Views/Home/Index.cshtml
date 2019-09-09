@@ -1,0 +1,125 @@
+﻿@using Microsoft.AspNetCore.Identity;
+
+@model WaveChat.Models.ChatModel
+@inject UserManager<WaveChat.Areas.Identity.Data.WaveChatUser> UserManager
+@{
+    ViewData["Title"] = "Strona domowa";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"
+            integrity="sha256-it5nQKHTz+34HijZJQkpNBIHsjpV8b6QzMJs9tmOBSo="
+            crossorigin="anonymous"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <link rel="stylesheet" href="~/css/font-awesome/css/all.css" />
+        <link rel="stylesheet" href="~/css/uiElements.css" />
+</head>
+
+<body onload="_init()">
+    <div class="container">
+        <div class="row w-100" >
+            <div class="col-md-4" style="background-color: #f1f2f6; border-radius: 4px 4px 4px 4px;">
+
+                <div class="input-group" style="margin-top: 2%;">
+                    <input type="text" class="form-control" id="searchBox" placeholder="Search..." autocomplete="off" aria-label="Search..." aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" id="Person" type="button"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                <hr>
+                @Html.Partial("SearchContainer", Model)
+
+                @*<div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+            <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
+            <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+            <a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a>
+        </div>*@
+            </div>
+           
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Messages</label>
+                        <div id="div1" class="area">
+            <div class="scrollbar-morpheus-den" id="msglist" style=" overflow:auto;">
+            </div>
+        </div>
+        
+        <hr>
+        <div style="display: inline-block;
+                margin: 0px 10px 0px 0px;">
+            
+            <form asp-controller="Home" asp-action="SendMessage" data-ajax="true" data-ajax-method="POST">
+                <!-- Login -->
+                <div class="form-group" style="display:flex ;align-items: center;">
+                    @Html.TextBoxFor(m => m.MessageModel.Message, new
+               {
+                   @class = "form-control",
+                   @id = "inlineFormInputName",
+                   @onkeydown = "if (event.keyCode == 13)" +
+                    "document.getElementById('sendBut').submit()",
+                   @placeholder = "Enter message...",
+                   @style = "display: inline;",
+                   @autocomplete = "off"
+               })
+                <span style="width: 1rem; display: inline;"></span>
+                <button id="sendBut" style="display: inline;" class="btn btn-primary" formmethod="post" type="submit" ><i class="fas fa-paper-plane"></i></button>
+                </div>
+
+                </form>
+                </div>
+</div>
+
+        
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.4.2/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#config-web-app -->
+    <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-database.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyAVFwti5cO3cNc8JOtlahOrrWbgIHVVXvI",
+            authDomain: "wavechat-617f9.firebaseapp.com",
+            databaseURL: "https://wavechat-617f9.firebaseio.com",
+            projectId: "wavechat-617f9",
+            storageBucket: "",
+            messagingSenderId: "335817646110",
+            appId: "1:335817646110:web:b8c82d74de7272c6"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
+
+        function getUsername(){
+            return "@UserManager.GetUserName(User)";
+        }
+
+        function getFirstnLastName(){
+            return "@UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName";
+        }
+        function getGUID(){
+            return "@UserManager.GetUserAsync(User).Result.FirebaseGUID";
+        }
+    </script>
+    <script src="../js/connection.js" charset="utf-8"></script>
+    <script src="../js/search.js" charset="utf-8"></script>
+
+    </div>
+    </div>
+</body>
+
+
+
+</html>
+
+
