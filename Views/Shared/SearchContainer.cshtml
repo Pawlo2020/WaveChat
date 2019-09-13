@@ -3,14 +3,19 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-
-<p>Count: @Model.SearchModel.Count</p>
+    <p>Results found: @Model.SearchModel.Count</p>
     <div class="list-group">
         @foreach (var item in Model.SearchModel)
         {
-            <a href="#" class="list-group-item list-group-item-action">@item.FirstName @item.LastName</a>
-
+            @Html.ActionLink(item.FirstName +" "+ item.LastName, "SelectConf","Home",new {ID = item.LastName },new { @class = "list-group-item list-group-item-action" })
         }
     </div>
+    <script>
+
+
+
+
+
+    </script>
 
 

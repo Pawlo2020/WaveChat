@@ -16,5 +16,6 @@ namespace WaveChat.Areas.Identity.Data
         public string LastName { get; set; }
 
         public string FirebaseGUID { get; set; }
+
     }
 }

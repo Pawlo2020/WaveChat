@@ -73,7 +73,7 @@ namespace WaveChat.Controllers
 
             foreach (var item in SearchList)
             {
-                _chat.SearchModel.Add(new Areas.Identity.Data.WaveChatUser() {FirstName = item.FirstName, LastName = item.LastName });
+                _chat.SearchModel.Add(new Areas.Identity.Data.WaveChatUser() {FirstName = item.FirstName, LastName = item.LastName, FirebaseGUID = item.FirebaseGUID });
 
             }
 
@@ -94,6 +94,23 @@ namespace WaveChat.Controllers
             var observable = firebaseClient
                .Child("msgs").AsObservable<WaveChat.Models.MessageModel>()
                .Subscribe(d => InstantiateToast(d.Object));
+
+        }
+
+        public void SelectConf(string ID)
+        {
+            var SearchList = from m in _context.Users select m;
+
+            SearchList = SearchList.Where(x => x.Id.Equals(ID));
+
+            string GUIDTwo = SearchList.Select(x => x.FirebaseGUID).ToString();
+
+            var user = GetCurrentUserAsync();
+
+            string ConfGUID = Encrypter.GetConfGuid(user.Result.FirebaseGUID, GUIDTwo);
+
+            
+
 
         }
 
