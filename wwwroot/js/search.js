@@ -1,24 +1,12 @@
-$(document).ready(function () {
+$(function () {
 
-    $("#searchBox").keyup(function () {
-        var searchtext = $(this).val();
-        debugger
-        $.ajax({
+    $("#searchBox").keyup(function (e) {
+        var n = $("#searchBox").val();
+        $.get("/Home/SearchContainer?person=" + n, function (r) {
+            //update ui with results
+            $("#resultsTable").html(r);
+        });
 
-            type: "Post",
-            url: "/Home/SearchContainer?Person=" + searchtext,
-            contentType: "html",
-            success: function (response) {
-                console.log('Correct')
-                document.getElementById("searchBar").innerHTML = response;
+    });
 
-            },
-            error: function (err) {
-                alert(err.responseText);
-            }
-
-        })
-
-    })
-
-})
+});

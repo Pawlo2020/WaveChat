@@ -36,10 +36,8 @@ namespace WaveChat.Controllers
             _notificationsMessageHandler = notificationsMessageHandler;
         }
 
-        public ActionResult SearchContainer(string person)
+        public PartialViewResult SearchContainer(string person)
         {
-
-
             _chat.SearchModel.Clear();
             var SearchList = from m in _context.Users select m;
             string First = "";
@@ -78,7 +76,7 @@ namespace WaveChat.Controllers
             }
 
 
-           return PartialView("SearchContainer",_chat);
+           return PartialView(_chat);
             
         }
 

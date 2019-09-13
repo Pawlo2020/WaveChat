@@ -121,6 +121,7 @@ D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\Razor\Views\Shared\SearchC
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_CookieConsentPartial.g.cshtml.cs
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_Layout.g.cshtml.cs
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_LoginPartial.g.cshtml.cs
+D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_SearchContainer.g.cshtml.cs
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_ValidationScriptsPartial.g.cshtml.cs
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\Razor\Views\_ViewImports.g.cshtml.cs
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\Razor\Views\_ViewStart.g.cshtml.cs

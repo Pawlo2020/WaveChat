@@ -2991,6 +2991,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "Views\\Shared\\_SearchContainer.cshtml",
+      "TargetPath": "Views\\Shared\\_SearchContainer.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "Areas\\Identity\\Pages\\Account\\Login.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\Account\\Login.cshtml",
       "FileKind": "mvc"
