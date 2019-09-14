@@ -28,12 +28,15 @@ namespace WaveChat.Controllers
         private NotificationMessageHandler _notificationsMessageHandler { get; set; }
         private WaveChatContext _context;
         static ChatModel _chat;
+        IDisposable observable;
 
         public HomeController(WaveChatContext context,UserManager<WaveChat.Areas.Identity.Data.WaveChatUser> userManager, NotificationMessageHandler notificationsMessageHandler)
         {
             _context = context;
             _userManager = userManager;
             _notificationsMessageHandler = notificationsMessageHandler;
+
+
         }
 
         public PartialViewResult SearchContainer(string person)
@@ -61,22 +64,25 @@ namespace WaveChat.Controllers
 
             if (!String.IsNullOrEmpty(First))
             {
-                SearchList = SearchList.Where(x => x.FirstName.Contains(First));
+                SearchList = SearchList.Where(x => x.FirstName.Contains(First)).Take(1);
+
+                
+
             }
 
             if (!String.IsNullOrEmpty(Last))
             {
-                SearchList = SearchList.Where(x => x.LastName.Contains(Last));
+                SearchList = SearchList.Where(x => x.LastName.Contains(Last)).Take(1);
             }
 
             foreach (var item in SearchList)
             {
-                _chat.SearchModel.Add(new Areas.Identity.Data.WaveChatUser() {FirstName = item.FirstName, LastName = item.LastName, FirebaseGUID = item.FirebaseGUID });
+                _chat.SearchModel.Add(new Areas.Identity.Data.WaveChatUser() {FirstName = item.FirstName, LastName = item.LastName, Id = item.Id });
 
             }
 
 
-           return PartialView(_chat);
+           return PartialView("SearchContainer",_chat);
             
         }
 
@@ -87,28 +93,34 @@ namespace WaveChat.Controllers
 
         }
 
-        public void LoadMessages()
+        public void LoadMessages(string ConfGUID)
         {
-            var observable = firebaseClient
-               .Child("msgs").AsObservable<WaveChat.Models.MessageModel>()
+
+            observable = firebaseClient
+               .Child("convs/" + ConfGUID).AsObservable<WaveChat.Models.MessageModel>()
                .Subscribe(d => InstantiateToast(d.Object));
 
         }
 
+        static string ConfGUID;
+
         public void SelectConf(string ID)
         {
+
+            
             var SearchList = from m in _context.Users select m;
 
-            SearchList = SearchList.Where(x => x.Id.Equals(ID));
+            SearchList = SearchList.Where(x => x.Id.Equals(ID)).Take(1);
 
-            string GUIDTwo = SearchList.Select(x => x.FirebaseGUID).ToString();
+            string GUIDTwo = SearchList.Select(x => x.FirebaseGUID).FirstOrDefault();
 
             var user = GetCurrentUserAsync();
 
-            string ConfGUID = Encrypter.GetConfGuid(user.Result.FirebaseGUID, GUIDTwo);
+            ConfGUID = Encrypter.GetConfGuid(user.Result.FirebaseGUID, GUIDTwo);
 
-            
+            Console.WriteLine(ConfGUID);
 
+            LoadMessages(ConfGUID);
 
         }
 
@@ -179,7 +191,7 @@ namespace WaveChat.Controllers
             msg.GUID = user.Result.FirebaseGUID;
 
             var resultDatabase = firebaseClient
-                      .Child("msgs/").PostAsync(msg);
+                      .Child("convs/" + ConfGUID).PostAsync(msg);
 
 
         }

@@ -14,8 +14,26 @@ namespace WaveChat.Communication
 
         public static string GetConfGuid(string KEY1, string KEY2)
         {
-            string mockVal = KEY1.Substring(0, KEY1.Length / 2) + KEY2.Substring(KEY2.Length / 2, KEY2.Length / 2);
 
+            string mockVal="";
+            int i = 0;
+            while (i < 12)
+            {
+                if (KEY1.ToArray()[i] < KEY2.ToArray()[i])
+                {
+                    mockVal = KEY1.Substring(0, KEY1.Length / 2) + KEY2.Substring(KEY2.Length / 2, KEY2.Length / 2);
+                    break;
+
+                }
+                else if (KEY1.ToArray()[i] > KEY2.ToArray()[i])
+                {
+                    mockVal = KEY2.Substring(0, KEY2.Length / 2) + KEY1.Substring(KEY1.Length / 2, KEY1.Length / 2);
+                    break;
+                }
+
+
+                i++;
+            }
             return GetHashValue(mockVal);
         }
 

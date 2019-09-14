@@ -141,5 +141,6 @@ function sendMessage(message) {
         });
         return false;
     });
-    Load();
+    //Load();
   }
+

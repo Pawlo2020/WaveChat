@@ -33,7 +33,9 @@
                     </div>
                 </div>
                 <hr>
-                @Html.Partial("SearchContainer", Model)
+                <div id="searchBar">
+
+                </div>
             </div>
            
             <div class="col-md-6">
@@ -105,11 +107,9 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         var database = firebase.database();
-
         function getUsername(){
             return "@UserManager.GetUserName(User)";
         }
-
         function getFirstnLastName(){
             return "@UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName";
         }
@@ -127,5 +127,3 @@
 
 
 </html>
-
-
