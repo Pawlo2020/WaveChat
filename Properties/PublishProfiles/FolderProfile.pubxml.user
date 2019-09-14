@@ -6,6 +6,6 @@ Ten plik jest wykorzystywany przez proces publikowania/pakowania projektu sieci 
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>C:\Users\pawel\Desktop\build</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\inetpub\wwwroot\WaveChatBuild</_PublishTargetUrl>
   </PropertyGroup>
 </Project>

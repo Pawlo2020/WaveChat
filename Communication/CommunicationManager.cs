@@ -10,25 +10,27 @@ namespace WaveChat.Communication
 {
     public class CommunicationManager
     {
-        private ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
+        private ConcurrentDictionary<string, ConnectedSocket> _sockets = new ConcurrentDictionary<string, ConnectedSocket>();
 
-        public WebSocket GetSocketById(string id)
+        public ConnectedSocket GetSocketById(string id)
         {
             return _sockets.FirstOrDefault(p => p.Key == id).Value;
         }
 
-        public ConcurrentDictionary<string, WebSocket> GetAll()
+        public ConcurrentDictionary<string, ConnectedSocket> GetAll()
         {
             return _sockets;
         }
 
-        public string GetId(WebSocket socket)
+        public string GetId(ConnectedSocket socket)
         {
             return _sockets.FirstOrDefault(p => p.Value == socket).Key;
         }
         public void AddSocket(WebSocket socket, string Id)
         {
-            _sockets.TryAdd(Id, socket);
+            ConnectedSocket connSocket = new ConnectedSocket();
+            connSocket.Socket = socket;
+            _sockets.TryAdd(Id, connSocket);
         }
 
         public void ChangeID(WebSocket socket, string Id)
@@ -40,10 +42,10 @@ namespace WaveChat.Communication
 
         public async Task RemoveSocket(string id)
         {
-            WebSocket socket;
+            ConnectedSocket socket;
             _sockets.TryRemove(id, out socket);
 
-            await socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
+            await socket.Socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
                                     statusDescription: "Closed by the WebSocketManager",
                                     cancellationToken: CancellationToken.None);
         }

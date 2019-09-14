@@ -26,6 +26,9 @@ namespace WaveChat.Communication
                 return;
 
             var socket = await context.WebSockets.AcceptWebSocketAsync();
+            ConnectedSocket connSocket = new ConnectedSocket();
+
+            connSocket.Socket = socket;
             //await _webSocketHandler.OnConnected(socket);
 
             await Receive(socket, async (result, buffer) =>
@@ -38,7 +41,7 @@ namespace WaveChat.Communication
 
                 else if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    await _webSocketHandler.OnDisconnected(socket);
+                    await _webSocketHandler.OnDisconnected(connSocket);
                     return;
                 }
 

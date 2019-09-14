@@ -29,7 +29,7 @@ namespace WaveChat.Controllers
         private WaveChatContext _context;
         static ChatModel _chat;
         IDisposable observable;
-        static CancellationTokenSource cts;
+        //static CancellationTokenSource cts;
 
 
         public HomeController(WaveChatContext context,UserManager<WaveChat.Areas.Identity.Data.WaveChatUser> userManager, NotificationMessageHandler notificationsMessageHandler)
@@ -88,47 +88,49 @@ namespace WaveChat.Controllers
             
         }
 
-        [HttpGet]
-        public async Task SendMessage([FromQueryAttribute]string message)
-        {
-            await _notificationsMessageHandler.SendMessageToAllAsync(message);
+        //[HttpGet]
+        //public async Task SendMessage([FromQueryAttribute]string message)
+        //{
+        //    await _notificationsMessageHandler.SendMessageToAllAsync(message);
 
-        }
+        //}
 
         public void LoadMessages(string ConfGUID, Task<WaveChat.Areas.Identity.Data.WaveChatUser> user)
         {
-            cts = new CancellationTokenSource();
+            _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).TokenSource = new CancellationTokenSource();
 
             observable = firebaseClient
                .Child("convs/" + ConfGUID).AsObservable<WaveChat.Models.MessageModel>()
                .Subscribe(d => InstantiateToast(d.Object, user));
-            cts.Token.Register(() => observable.Dispose());
+            _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).TokenSource.Token.Register(() => observable.Dispose());
         }
 
-        static string ConfGUID;
 
         public void SelectConf(string ID)
         {
+            var user = GetCurrentUserAsync();
 
-            if(cts!=null)
+
+            if (_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).TokenSource != null)
             {
-                cts.Cancel();
+                _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).TokenSource.Cancel();
             }
-            
+
             var SearchList = from m in _context.Users select m;
 
             SearchList = SearchList.Where(x => x.Id.Equals(ID)).Take(1);
 
             string GUIDTwo = SearchList.Select(x => x.FirebaseGUID).FirstOrDefault();
 
-            var user = GetCurrentUserAsync();
+            
 
-            ConfGUID = Encrypter.GetConfGuid(user.Result.FirebaseGUID, GUIDTwo);
-
-
+            _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).ConfGUID = Encrypter.GetConfGuid(user.Result.FirebaseGUID, GUIDTwo);
 
 
-                LoadMessages(ConfGUID,user);
+
+
+
+                LoadMessages(_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).ConfGUID, user);
             
 
         }
@@ -203,7 +205,7 @@ namespace WaveChat.Controllers
             msg.GUID = user.Result.FirebaseGUID;
 
             var resultDatabase = firebaseClient
-                      .Child("convs/" + ConfGUID).PostAsync(msg);
+                      .Child("convs/" + _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).ConfGUID).PostAsync(msg);
 
 
         }

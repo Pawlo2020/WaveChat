@@ -39,7 +39,7 @@ namespace WaveChat.Communication
         /// </summary>
         /// <param name="socket"></param>
         /// <returns></returns>
-        public virtual async Task OnDisconnected(WebSocket socket)
+        public virtual async Task OnDisconnected(ConnectedSocket socket)
         {
             await _communicationManager.RemoveSocket(_communicationManager.GetId(socket));
         }
@@ -50,12 +50,12 @@ namespace WaveChat.Communication
         /// <param name="socket"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task SendMessageAsync(WebSocket socket, string message)
+        public async Task SendMessageAsync(ConnectedSocket socket, string message)
         {
-            if (socket.State != WebSocketState.Open)
+            if (socket.Socket.State != WebSocketState.Open)
                 return;
 
-            await socket.SendAsync(buffer: new ArraySegment<byte>(array: Encoding.UTF8.GetBytes(message),
+            await socket.Socket.SendAsync(buffer: new ArraySegment<byte>(array: Encoding.UTF8.GetBytes(message),
                                                                   offset: 0,
                                                                   count: Encoding.UTF8.GetBytes(message).Length),
                                    messageType: WebSocketMessageType.Text,
@@ -79,7 +79,7 @@ namespace WaveChat.Communication
         {
             foreach (var pair in _communicationManager.GetAll())
             {
-                if (pair.Value.State == WebSocketState.Open)
+                if (pair.Value.Socket.State == WebSocketState.Open)
                     await SendMessageAsync(pair.Value, message);
             }
         }
