@@ -29,6 +29,8 @@ namespace WaveChat.Controllers
         private WaveChatContext _context;
         static ChatModel _chat;
         IDisposable observable;
+        static CancellationTokenSource cts;
+
 
         public HomeController(WaveChatContext context,UserManager<WaveChat.Areas.Identity.Data.WaveChatUser> userManager, NotificationMessageHandler notificationsMessageHandler)
         {
@@ -93,13 +95,14 @@ namespace WaveChat.Controllers
 
         }
 
-        public void LoadMessages(string ConfGUID)
+        public void LoadMessages(string ConfGUID, Task<WaveChat.Areas.Identity.Data.WaveChatUser> user)
         {
+            cts = new CancellationTokenSource();
 
             observable = firebaseClient
                .Child("convs/" + ConfGUID).AsObservable<WaveChat.Models.MessageModel>()
-               .Subscribe(d => InstantiateToast(d.Object));
-
+               .Subscribe(d => InstantiateToast(d.Object, user));
+            cts.Token.Register(() => observable.Dispose());
         }
 
         static string ConfGUID;
@@ -107,6 +110,10 @@ namespace WaveChat.Controllers
         public void SelectConf(string ID)
         {
 
+            if(cts!=null)
+            {
+                cts.Cancel();
+            }
             
             var SearchList = from m in _context.Users select m;
 
@@ -118,9 +125,11 @@ namespace WaveChat.Controllers
 
             ConfGUID = Encrypter.GetConfGuid(user.Result.FirebaseGUID, GUIDTwo);
 
-            Console.WriteLine(ConfGUID);
 
-            LoadMessages(ConfGUID);
+
+
+                LoadMessages(ConfGUID,user);
+            
 
         }
 
@@ -149,7 +158,7 @@ namespace WaveChat.Controllers
             return View(new Wave.Models.ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async void InstantiateToast(MessageModel model)
+        public async void InstantiateToast(MessageModel model, Task<WaveChat.Areas.Identity.Data.WaveChatUser> user)
         {
             //Serialize
             if (!(model is null))
@@ -164,7 +173,10 @@ namespace WaveChat.Controllers
                     LastName = first.First().Object.LastName
                 };
                 string output = JsonConvert.SerializeObject(_initToast);
-                await _notificationsMessageHandler.SendMessageToFirst(output);
+
+                
+
+                await _notificationsMessageHandler.SendMessageAsync(user.Result.Id,output);
             }
         }
         struct ToastMessage

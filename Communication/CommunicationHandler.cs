@@ -29,10 +29,10 @@ namespace WaveChat.Communication
         /// </summary>
         /// <param name="socket"></param>
         /// <returns></returns>
-        public virtual async Task OnConnected(WebSocket socket)
-        {
-            _communicationManager.AddSocket(socket);
-        }
+        //public virtual async Task OnConnected(WebSocket socket)
+        //{
+        //    _communicationManager.AddSocket(socket);
+        //}
 
         /// <summary>
         /// Remove the connected socket from the socket list in the communication manager in case of disconnected connection

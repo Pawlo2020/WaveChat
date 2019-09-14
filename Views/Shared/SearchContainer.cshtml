@@ -3,7 +3,14 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
+    @{ 
+        Model.SearchModel = Model.SearchModel.GroupBy(x => x.Id).Select(y => y.First()).ToList();
+
+
+    }
+
     <p>Results found: @Model.SearchModel.Count</p>
+
         <div class="list-group">
             @foreach (var item in Model.SearchModel)
             {

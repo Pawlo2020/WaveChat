@@ -26,10 +26,17 @@ namespace WaveChat.Communication
         {
             return _sockets.FirstOrDefault(p => p.Value == socket).Key;
         }
-        public void AddSocket(WebSocket socket)
+        public void AddSocket(WebSocket socket, string Id)
         {
-            _sockets.TryAdd(CreateConnectionId(), socket);
+            _sockets.TryAdd(Id, socket);
         }
+
+        public void ChangeID(WebSocket socket, string Id)
+        {
+            
+
+        }
+
 
         public async Task RemoveSocket(string id)
         {

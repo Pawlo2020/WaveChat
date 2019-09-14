@@ -26,7 +26,7 @@ namespace WaveChat.Communication
                 return;
 
             var socket = await context.WebSockets.AcceptWebSocketAsync();
-            await _webSocketHandler.OnConnected(socket);
+            //await _webSocketHandler.OnConnected(socket);
 
             await Receive(socket, async (result, buffer) =>
             {
