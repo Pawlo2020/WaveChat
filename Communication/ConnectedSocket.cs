@@ -15,7 +15,7 @@ namespace WaveChat.Communication
 
         public string ConfGUID;
 
-
+        public bool InstantiateToast;
 
 
     }

@@ -95,21 +95,51 @@ namespace WaveChat.Controllers
 
         //}
 
-        public void LoadMessages(string ConfGUID, Task<WaveChat.Areas.Identity.Data.WaveChatUser> user)
+        public async void LoadMessages(string ConfGUID, Task<WaveChat.Areas.Identity.Data.WaveChatUser> user)
         {
             _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).TokenSource = new CancellationTokenSource();
-
+            
             observable = firebaseClient
                .Child("convs/" + ConfGUID).AsObservable<WaveChat.Models.MessageModel>()
                .Subscribe(d => InstantiateToast(d.Object, user));
             _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).TokenSource.Token.Register(() => observable.Dispose());
+
+            var messageStack = firebaseClient.Child("convs/" + ConfGUID).OrderByKey().OnceAsync<MessageModel>().Result;
+
+            List<ToastMessage> list = new List<ToastMessage>();
+
+            foreach (var item in messageStack)
+            {
+
+                var first = await firebaseClient.Child("users/" + item.Object.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
+
+                ToastMessage _initToast = new ToastMessage
+                {
+                    Message = item.Object.Message,
+                    Timestamp = item.Object.Timestamp,
+                    FirstName = first.First().Object.FirstName,
+                    LastName = first.First().Object.LastName
+                };
+
+                list.Add(_initToast);
+            }
+
+            list.AsParallel().OrderBy(d => d.Timestamp);
+
+            var serialized = JsonConvert.SerializeObject(list);
+
+           await _notificationsMessageHandler.SendMessageAsync(user.Result.Id, serialized);
+
+            _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).InstantiateToast = true;
+
+
         }
 
 
         public void SelectConf(string ID)
         {
             var user = GetCurrentUserAsync();
-
+            _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).InstantiateToast = false;
 
             if (_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).TokenSource != null)
             {
@@ -162,24 +192,41 @@ namespace WaveChat.Controllers
 
         public async void InstantiateToast(MessageModel model, Task<WaveChat.Areas.Identity.Data.WaveChatUser> user)
         {
-            //Serialize
-            if (!(model is null))
+
+            if(_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).InstantiateToast is true)
             {
-                var first = await firebaseClient.Child("users/" + model.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
-
-                ToastMessage _initToast = new ToastMessage
+                //Serialize
+                if (!(model is null))
                 {
-                    Message = model.Message,
-                    Timestamp = model.Timestamp,
-                    FirstName = first.First().Object.FirstName,
-                    LastName = first.First().Object.LastName
-                };
-                string output = JsonConvert.SerializeObject(_initToast);
+                    var first = await firebaseClient.Child("users/" + model.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
 
+                    ToastMessage _initToast = new ToastMessage
+                    {
+                        Message = model.Message,
+                        Timestamp = model.Timestamp,
+                        FirstName = first.First().Object.FirstName,
+                        LastName = first.First().Object.LastName
+                    };
+
+                    List<ToastMessage> ToastList = new List<ToastMessage>();
+
+                    ToastList.Add(_initToast);
+
+                    string output = JsonConvert.SerializeObject(ToastList);
+
+
+
+                    await _notificationsMessageHandler.SendMessageAsync(user.Result.Id, output);
+                }
+            }else if (_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).InstantiateToast is false)
+            {
                 
 
-                await _notificationsMessageHandler.SendMessageAsync(user.Result.Id,output);
             }
+
+
+
+            
         }
         struct ToastMessage
         {

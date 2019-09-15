@@ -50,20 +50,27 @@ function instantiateFAKEToast(content) {
 
     var msg = JSON.parse(content);
 
-    newDiv = document.createElement("div");
+    
+    //newDiv.setAttribute("style", "width: " + length + "px;");
+    console.log(msg[0]["Timestamp"]);
+    
+    for (let index = 0; index < msg.length; index++) {
+        newDiv = document.createElement("div");
 
-    newDiv.setAttribute("class", "toast");
-    newDiv.setAttribute("role", "alert");
-    newDiv.setAttribute("aria-live", "assertive");
-    newDiv.setAttribute("aria-atomic", "true");
-    newDiv.setAttribute("data-autohide", "false");
-    //newDiv.setAttribute("style", "width: " + length + "px;");   
-    newDiv.innerHTML = '<div class="toast-header" style="background-image: linear-gradient(40deg,#ff6ec4,#7873f5);"><i class="fas fa-user"></i><span style="width: 5px;"></span> <strong style="color: white;" class="mr-auto">' + msg.FirstName + " " + msg.LastName + '</strong><small style="color: white">' + msg.Timestamp + '</small></div><div class="toast-body" style="background-color: #786fa6;"><span style="color: white; word-wrap: break-word;">' + msg.Message + '</span></div>';
+        newDiv.setAttribute("class", "toast");
+        newDiv.setAttribute("role", "alert");
+        newDiv.setAttribute("aria-live", "assertive");
+        newDiv.setAttribute("aria-atomic", "true");
+        newDiv.setAttribute("data-autohide", "false");
 
-    msgdiv.appendChild(newDiv);
-    $(newDiv).toast('show');
-    msgdiv.scrollTop = msgdiv.scrollHeight;
-    textbox.value = '';
+        newDiv.innerHTML = '<div class="toast-header" style="background-image: linear-gradient(40deg,#ff6ec4,#7873f5);"><i class="fas fa-user"></i><span style="width: 5px;"></span> <strong style="color: white;" class="mr-auto">' + msg[index]["FirstName"] + " " + msg[index]["LastName"] + '</strong><small style="color: white">' + msg[index]["Timestamp"] + '</small></div><div class="toast-body" style="background-color: #786fa6;"><span style="color: white; word-wrap: break-word;">' + msg[index]["Message"]  + '</span></div>';
+        
+        msgdiv.appendChild(newDiv);
+        $(newDiv).toast('show');
+        msgdiv.scrollTop = msgdiv.scrollHeight
+    }
+
+;
 }
 
 function updateChat(msg){
