@@ -21,21 +21,16 @@ namespace WaveChat.Controllers
         FirebaseClient firebaseClient = new FirebaseClient("https://wavechat-617f9.firebaseio.com");
         private readonly UserManager<Areas.Identity.Data.WaveChatUser> _userManager;
 
-
         private NotificationMessageHandler _notificationsMessageHandler { get; set; }
         private WaveChatContext _context;
         static ChatModel _chat;
         IDisposable observable;
-        //static CancellationTokenSource cts;
-
 
         public HomeController(WaveChatContext context, UserManager<WaveChat.Areas.Identity.Data.WaveChatUser> userManager, NotificationMessageHandler notificationsMessageHandler)
         {
             _context = context;
             _userManager = userManager;
             _notificationsMessageHandler = notificationsMessageHandler;
-
-
         }
 
         public PartialViewResult SearchContainer(string person)
@@ -49,25 +44,18 @@ namespace WaveChat.Controllers
                 First = person.Split(' ')[0];
             }
             catch (Exception e)
-            {
-
-            }
+            {}
 
             try
             {
                 Last = person.Split(' ')[1];
             }
             catch (Exception e)
-            {
-
-            }
+            {}
 
             if (!String.IsNullOrEmpty(First))
             {
                 SearchList = SearchList.Where(x => x.FirstName.Contains(First)).Take(1);
-
-
-
             }
 
             if (!String.IsNullOrEmpty(Last))
@@ -78,20 +66,10 @@ namespace WaveChat.Controllers
             foreach (var item in SearchList)
             {
                 _chat.SearchModel.Add(new Areas.Identity.Data.WaveChatUser() { FirstName = item.FirstName, LastName = item.LastName, Id = item.Id });
-
             }
 
-
             return PartialView("SearchContainer", _chat);
-
         }
-
-        //[HttpGet]
-        //public async Task SendMessage([FromQueryAttribute]string message)
-        //{
-        //    await _notificationsMessageHandler.SendMessageToAllAsync(message);
-
-        //}
 
         public async void LoadMessages(string ConfGUID, Task<WaveChat.Areas.Identity.Data.WaveChatUser> user)
         {
@@ -105,98 +83,34 @@ namespace WaveChat.Controllers
             var messageStack = firebaseClient.Child("convs/" + ConfGUID).OrderByKey().OnceAsync<MessageModel>().Result;
             List<ToastMessage> list = new List<ToastMessage>();
 
-            //foreach (var item in messageStack)
-            //{
+            Stopwatch sw = Stopwatch.StartNew();
 
-            //    var first = await firebaseClient.Child("users/" + item.Object.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
+            Parallel.ForEach(messageStack, () => new List<ToastMessage>(), (item, pls, localObj) =>
+            {
+                var first = firebaseClient.Child("users/" + item.Object.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
+                var obj = new ToastMessage
+                {
+                    Message = item.Object.Message,
+                    Timestamp = item.Object.Timestamp,
+                    FirstName = first.Result.First().Object.FirstName,
+                    LastName = first.Result.First().Object.LastName
+                };
+                localObj.Add(obj);
+                return localObj;
+            },
+            localObj =>
+            {
+                foreach (var result in localObj)
+                {
+                    list.Add(result);
+                }
+            });
 
-            //    ToastMessage _initToast = new ToastMessage
-            //    {
-            //        Message = item.Object.Message,
-            //        Timestamp = item.Object.Timestamp,
-            //        FirstName = first.First().Object.FirstName,
-            //        LastName = first.First().Object.LastName
-            //    };
-
-            //    list.Add(_initToast);
-            //}
-
-
-
-
-            //Task t = Task.Run(() =>
-            //{
-            //    Parallel.ForEach(messageStack, (item) =>
-            //    {
-            //        int i = 1;
-            //        var first = firebaseClient.Child("users/" + item.Object.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
-
-            //        ToastMessage _initToast = new ToastMessage
-            //        {
-            //            Message = item.Object.Message,
-            //            Timestamp = item.Object.Timestamp,
-            //            FirstName = first.Result.First().Object.FirstName,
-            //            LastName = first.Result.First().Object.LastName
-            //        };
-
-            //        list.Add(_initToast);
-            //        Console.WriteLine($"Added: {i}");
-            //        i++;
-            //    });
-
-
-
-
-            //}).ContinueWith((i) =>
-            //{
-
-
-            //});
-
-                    Parallel.ForEach(messageStack, () => new List<ToastMessage>(), (item, pls, localObj) =>
-                        {
-                            var first = firebaseClient.Child("users/" + item.Object.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
-                            var obj = new ToastMessage
-                            {
-                                Message = item.Object.Message,
-                                Timestamp = item.Object.Timestamp,
-                                FirstName = first.Result.First().Object.FirstName,
-                                LastName = first.Result.First().Object.LastName
-                            };
-                            localObj.Add(obj);
-                            return localObj;
-                        },
-                        localObj =>
-                        {
-                            foreach (var result in localObj)
-                            {
-                                list.Add(result);
-                                
-                            }
-                            
-
-                        });
-
-
-
-
-
-            
-            Console.WriteLine("SERIALIZE");
             var serialized = JsonConvert.SerializeObject(list.AsParallel().OrderBy(d=>d.Timestamp));
 
             await _notificationsMessageHandler.SendMessageAsync(user.Result.Id, serialized);
 
             _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).InstantiateToast = true;
-
-
-
-
-
-
-
-
-
         }
 
 
@@ -216,26 +130,15 @@ namespace WaveChat.Controllers
 
             string GUIDTwo = SearchList.Select(x => x.FirebaseGUID).FirstOrDefault();
 
-
-
             _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).ConfGUID = Encrypter.GetConfGuid(user.Result.FirebaseGUID, GUIDTwo);
 
-
-
-
-
             LoadMessages(_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).ConfGUID, user);
-
-
         }
 
 
         [Authorize]
         public IActionResult Index()
         {
-            Guid a;
-            //Legacy
-            //MessageModel msg = new MessageModel();
             ChatModel chat = new ChatModel();
             chat.MessageModel = new MessageModel();
             chat.SearchModel = new List<Areas.Identity.Data.WaveChatUser>();
@@ -278,20 +181,11 @@ namespace WaveChat.Controllers
 
                     string output = JsonConvert.SerializeObject(ToastList);
 
-
-
                     await _notificationsMessageHandler.SendMessageAsync(user.Result.Id, output);
                 }
             }
             else if (_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).InstantiateToast is false)
-            {
-
-
-            }
-
-
-
-
+            {}
         }
         struct ToastMessage
         {
@@ -304,25 +198,23 @@ namespace WaveChat.Controllers
             public string LastName { get; set; }
         }
 
-
         [HttpPost]
         public void SendMessageT(string value)
         {
+            if (!String.IsNullOrWhiteSpace(value))
+            {
+                MessageModel msg = new MessageModel();
+                msg.Message = value;
+                msg.Timestamp = DateTime.Now.ToString();
+                Console.WriteLine(msg.Message);
+                var user = GetCurrentUserAsync();
+                msg.GUID = user.Result.FirebaseGUID;
 
-            MessageModel msg = new MessageModel();
-            msg.Message = value;
-            msg.Timestamp = DateTime.Now.ToString();
-            Console.WriteLine(msg.Message);
-            var user = GetCurrentUserAsync();
-            msg.GUID = user.Result.FirebaseGUID;
-
-            var resultDatabase = firebaseClient
-                      .Child("convs/" + _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).ConfGUID).PostAsync(msg);
-
-
+                var resultDatabase = firebaseClient.Child("convs/" + _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).ConfGUID).PostAsync(msg);
+            }
         }
-        Task<WaveChat.Areas.Identity.Data.WaveChatUser> GetCurrentUserAsync() => _userManager.GetUserAsync(User);
 
+        Task<WaveChat.Areas.Identity.Data.WaveChatUser> GetCurrentUserAsync() => _userManager.GetUserAsync(User);
 
         public void OnPostMessage(MessageModel message)
         {
@@ -334,9 +226,7 @@ namespace WaveChat.Controllers
 
             }
             catch (Exception e)
-            {
-
-            }
+            {}
         }
     }
 }
