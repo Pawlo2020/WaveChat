@@ -72,7 +72,7 @@
             },
             "Microsoft.jQuery.Unobtrusive.Ajax": {
               "target": "Package",
-              "version": "[3.2.3, )"
+              "version": "[3.2.6, )"
             },
             "MySql.Data": {
               "target": "Package",

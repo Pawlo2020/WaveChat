@@ -43,22 +43,20 @@ namespace WaveChat.Controllers
             {
                 First = person.Split(' ')[0];
             }
-            catch (Exception e)
-            {}
+            catch{}
 
             try
             {
                 Last = person.Split(' ')[1];
             }
-            catch (Exception e)
-            {}
+            catch{}
 
-            if (!String.IsNullOrEmpty(First))
+            if (!string.IsNullOrEmpty(First))
             {
                 SearchList = SearchList.Where(x => x.FirstName.Contains(First)).Take(1);
             }
 
-            if (!String.IsNullOrEmpty(Last))
+            if (!string.IsNullOrEmpty(Last))
             {
                 SearchList = SearchList.Where(x => x.LastName.Contains(Last)).Take(1);
             }
@@ -187,6 +185,7 @@ namespace WaveChat.Controllers
             else if (_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).InstantiateToast is false)
             {}
         }
+
         struct ToastMessage
         {
             public string Message { get; set; }
@@ -216,17 +215,13 @@ namespace WaveChat.Controllers
 
         Task<WaveChat.Areas.Identity.Data.WaveChatUser> GetCurrentUserAsync() => _userManager.GetUserAsync(User);
 
-        public void OnPostMessage(MessageModel message)
+        public void OnPostMessage(MessageModel messageValue)
         {
-
             try
             {
-                var resultDatabase = firebaseClient
-                    .Child("msgs/").PostAsync(message);
-
+                var resultDatabase = firebaseClient.Child("msgs/").PostAsync(messageValue);
             }
-            catch (Exception e)
-            {}
+            catch{}
         }
     }
 }

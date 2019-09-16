@@ -79,6 +79,7 @@ D:\Projekty\WaveChat\WaveChat\bin\Debug\netcoreapp2.2\WaveChat.dll
 D:\Projekty\WaveChat\WaveChat\bin\Debug\netcoreapp2.2\WaveChat.pdb
 D:\Projekty\WaveChat\WaveChat\bin\Debug\netcoreapp2.2\WaveChat.Views.dll
 D:\Projekty\WaveChat\WaveChat\bin\Debug\netcoreapp2.2\WaveChat.Views.pdb
+D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.csprojAssemblyReference.cache
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.csproj.CoreCompileInputs.cache
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.RazorAssemblyInfo.cache
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.RazorAssemblyInfo.cs
@@ -138,4 +139,3 @@ D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.Views.pdb
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.dll
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.pdb
 D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.csproj.CopyComplete
-D:\Projekty\WaveChat\WaveChat\obj\Debug\netcoreapp2.2\WaveChat.csprojAssemblyReference.cache

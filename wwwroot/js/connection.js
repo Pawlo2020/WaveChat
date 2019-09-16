@@ -3,7 +3,29 @@ var textbox = document.getElementById("inlineFormInputName");
 var msgdiv = document.getElementById("msglist");
 //var webSocket = new WebSocket('ws://192.168.0.100:90/ws');
 var webSocket = new WebSocket('wss://localhost:44391/ws');
-var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var monthsArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+//Initialize function
+function _init(){
+    $('.toast').toast('show');
+    $("#sendForm").submit(function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url: "/Home/SendMessageT",
+            type: 'POST',
+            data: { value: $('#inlineFormInputName').val() },
+            success: function () {
+                $('#inlineFormInputName').val('')
+            },
+            error: function () {
+                alert("error");
+            }
+        }); 
+        return false;
+    });
+    //Load();
+}
 
 //Load all messages from conversation
 function Load() {
@@ -50,25 +72,3 @@ webSocket.onmessage = function (event) {
 webSocket.onerror = function(event){
     console.log('Socket Error');
 }
-
-function _init(){
-    $('.toast').toast('show');
-    $("#sendForm").submit(function(e){
-        e.preventDefault();
-
-        $.ajax({
-            url: "/Home/SendMessageT",
-            type: 'POST',
-            data: { value: $('#inlineFormInputName').val() },
-            success: function () {
-                $('#inlineFormInputName').val('')
-            },
-            error: function () {
-                alert("error");
-            }
-        }); 
-        return false;
-    });
-    //Load();
-}
-

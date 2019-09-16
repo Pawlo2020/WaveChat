@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "7601a7e691863442dca300b639d6a1f434b2be44"
+    "signature": "b8246dd4206037baa296ca8f3f81969a9433c9f5"
   },
   "compilationOptions": {
     "defines": [
@@ -30,7 +30,7 @@
           "Microsoft.EntityFrameworkCore": "2.2.6",
           "Microsoft.NETCore.App": "2.2.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.3",
-          "Microsoft.jQuery.Unobtrusive.Ajax": "3.2.3",
+          "Microsoft.jQuery.Unobtrusive.Ajax": "3.2.6",
           "MySql.Data": "8.0.17",
           "MySql.Data.Entity": "6.10.9",
           "MySql.Data.EntityFrameworkCore": "8.0.17",
@@ -176,7 +176,7 @@
         }
       },
       "Microsoft.EntityFrameworkCore.Analyzers/2.2.6": {},
-      "Microsoft.jQuery.Unobtrusive.Ajax/3.2.3": {
+      "Microsoft.jQuery.Unobtrusive.Ajax/3.2.6": {
         "dependencies": {
           "jQuery": "1.8.0"
         }
@@ -3995,12 +3995,12 @@
       "path": "microsoft.entityframeworkcore.analyzers/2.2.6",
       "hashPath": "microsoft.entityframeworkcore.analyzers.2.2.6.nupkg.sha512"
     },
-    "Microsoft.jQuery.Unobtrusive.Ajax/3.2.3": {
+    "Microsoft.jQuery.Unobtrusive.Ajax/3.2.6": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-bp8G1m66xaNE9RLm58qk7eXNDlH/yUBc/Dt8dMof/t0hBN3JpUQpPF7pavEVAauPCmcvM90pTrATG8nXbCi9yw==",
-      "path": "microsoft.jquery.unobtrusive.ajax/3.2.3",
-      "hashPath": "microsoft.jquery.unobtrusive.ajax.3.2.3.nupkg.sha512"
+      "sha512": "sha512-udg7ZBszgqxloQ+ShJRONKQAzPnJIlUhKZB+AIvZdKh7CDc5Nms69T9X0hN5i+NqMmQE6njkzdCcEb16lPdJTw==",
+      "path": "microsoft.jquery.unobtrusive.ajax/3.2.6",
+      "hashPath": "microsoft.jquery.unobtrusive.ajax.3.2.6.nupkg.sha512"
     },
     "Microsoft.VisualStudio.Web.CodeGeneration/2.2.3": {
       "type": "package",
