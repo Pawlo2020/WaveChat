@@ -1,8 +1,8 @@
 var textbox = document.getElementById("inlineFormInputName");
 //var textarea = document.getElementById("exampleFormControlTextarea1");
 var msgdiv = document.getElementById("msglist");
-var webSocket = new WebSocket('ws://192.168.0.100:90/ws');
-
+//var webSocket = new WebSocket('ws://192.168.0.100:90/ws');
+var webSocket = new WebSocket('wss://localhost:44391/ws');
 
 var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 

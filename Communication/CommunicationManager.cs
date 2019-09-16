@@ -24,7 +24,7 @@ namespace WaveChat.Communication
 
         public string GetId(ConnectedSocket socket)
         {
-            return _sockets.FirstOrDefault(p => p.Value == socket).Key;
+            return _sockets.FirstOrDefault(p => p.Value.Socket == socket.Socket).Key;
         }
         public void AddSocket(WebSocket socket, string Id)
         {
