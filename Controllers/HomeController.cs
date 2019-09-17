@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using WaveChat.Communication;
 using WaveChat.Models;
@@ -94,8 +95,17 @@ namespace WaveChat.Controllers
                     Message = item.Object.Message,
                     Timestamp = item.Object.Timestamp,
                     FirstName = first.Result.First().Object.FirstName,
-                    LastName = first.Result.First().Object.LastName
+                    LastName = first.Result.First().Object.LastName,
+                    //UserID = from m in _context.Users where m.FirebaseGUID.Equals(item.Object.GUID) select m.Id.FirstOrDefault()
+                    
                 };
+                //obj.UserID = _context.Users.Where(x => x.FirebaseGUID.Equals(item.Object.GUID)).AsParallel().Select(m => m.Id).FirstOrDefault();
+
+                var optionsBuilder = new DbContextOptionsBuilder<WaveChatContext>();
+                optionsBuilder.UseMySql("server=remotemysql.com;user=jyKYm15Znj;database=jyKYm15Znj;password=EbVGAPF1Wz;port=3306;persistsecurityinfo=True");
+                WaveChatContext context = new WaveChatContext(optionsBuilder.Options);
+                obj.UserID = context.Users.Where(x => x.FirebaseGUID.Equals(item.Object.GUID)).AsParallel().Select(m => m.Id).FirstOrDefault();
+
                 localObj.Add(obj);
                 return localObj;
             },
@@ -167,13 +177,16 @@ namespace WaveChat.Controllers
                 if (!(model is null))
                 {
                     var first = await firebaseClient.Child("users/" + model.GUID).OrderByKey().LimitToFirst(1).OnceAsync<Areas.Identity.Data.FirebaseNameModel>();
-
+                    var optionsBuilder = new DbContextOptionsBuilder<WaveChatContext>();
+                    optionsBuilder.UseMySql("server=remotemysql.com;user=jyKYm15Znj;database=jyKYm15Znj;password=EbVGAPF1Wz;port=3306;persistsecurityinfo=True");
+                    WaveChatContext context = new WaveChatContext(optionsBuilder.Options);
                     ToastMessage _initToast = new ToastMessage
                     {
                         Message = model.Message,
                         Timestamp = model.Timestamp,
                         FirstName = first.First().Object.FirstName,
-                        LastName = first.First().Object.LastName
+                        LastName = first.First().Object.LastName,
+                        UserID = context.Users.Where(x => x.FirebaseGUID.Equals(model.GUID)).AsParallel().Select(m => m.Id).FirstOrDefault()
                     };
 
                     List<ToastMessage> ToastList = new List<ToastMessage>();
@@ -198,6 +211,8 @@ namespace WaveChat.Controllers
             public string FirstName { get; set; }
 
             public string LastName { get; set; }
+
+            public string UserID { get; set; }
         }
 
         [HttpPost]

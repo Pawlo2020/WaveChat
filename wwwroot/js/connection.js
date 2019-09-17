@@ -49,12 +49,35 @@ function instantiateToast(content) {
         newDiv.setAttribute("aria-live", "assertive");
         newDiv.setAttribute("aria-atomic", "true");
         newDiv.setAttribute("data-autohide", "false");
+        newDiv.innerHTML = '<div class="toast-header" style="background-image: linear-gradient(40deg,#ff6ec4,#7873f5);"><i class="fas fa-user"></i><span style="width: 5px;"></span> <strong style="color: white;" class="mr-auto">' + msg[index]["FirstName"] + " " + msg[index]["LastName"] + '</strong><small style="color: white">' + msg[index]["Timestamp"] + '</small></div><div class="toast-body" align="left" style="background-color: #786fa6;"><span style="color: white; word-wrap: break-word;">' + msg[index]["Message"]  + '</span></div>';
 
-        newDiv.innerHTML = '<div class="toast-header" style="background-image: linear-gradient(40deg,#ff6ec4,#7873f5);"><i class="fas fa-user"></i><span style="width: 5px;"></span> <strong style="color: white;" class="mr-auto">' + msg[index]["FirstName"] + " " + msg[index]["LastName"] + '</strong><small style="color: white">' + msg[index]["Timestamp"] + '</small></div><div class="toast-body" style="background-color: #786fa6;"><span style="color: white; word-wrap: break-word;">' + msg[index]["Message"]  + '</span></div>';
+        var fakeDiv = document.createElement("div");
+
+        fakeDiv.setAttribute("class", "toast");
+        fakeDiv.setAttribute("role", "alert");
+        fakeDiv.setAttribute("aria-live", "assertive");
+        fakeDiv.setAttribute("aria-atomic", "true");
+        fakeDiv.setAttribute("data-autohide", "false");
+        fakeDiv.innerHTML = '<div class="toast-header" style="background-image: linear-gradient(40deg,#ff6ec4,#7873f5);"><i class="fas fa-user"></i><span style="width: 5px;"></span> <strong style="color: white;" class="mr-auto">' + msg[index]["FirstName"] + " " + msg[index]["LastName"] + '</strong><small style="color: white">' + msg[index]["Timestamp"] + '</small></div><div class="toast-body" align="left" style="background-color: #786fa6;"><span style="color: white; word-wrap: break-word;">' + msg[index]["Message"]  + '</span></div>';
         
-        msgdiv.appendChild(newDiv);
+        if(msg[index]["UserID"]==item){
+
+        
+        
+        
+        
+        document.getElementById('col1').appendChild(newDiv);
+        document.getElementById('col2').appendChild(fakeDiv);
+
+        
+        }else{
+        
+        document.getElementById('col2').appendChild(newDiv);
+        document.getElementById('col1').appendChild(fakeDiv);
+        }
         $(newDiv).toast('show');
         msgdiv.scrollTop = msgdiv.scrollHeight;
+        
     };
 }
 
