@@ -39,6 +39,29 @@ namespace WaveChat.Communication
 
         }
 
+        public bool CheckStatus(string Id)
+        {
+            ConnectedSocket checkSocket;
+            if (_sockets.TryGetValue(Id,out checkSocket))
+            {
+                if(checkSocket.Socket.State == WebSocketState.Open)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            else
+            {
+                return false;
+            }
+
+
+        }
+
 
         public async Task RemoveSocket(string id)
         {

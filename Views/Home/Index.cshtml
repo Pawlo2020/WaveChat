@@ -40,19 +40,21 @@
            
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Messages</label>
-                        <div id="div1" class="area">
-            <div class="scrollbar-morpheus-den" id="msglist" style=" overflow:auto;">
-
-
-
-
-                
-            </div>
-        </div>
+                    <div class="card" id="headingContainer">
+                        <div class="card-body">
+                            <h4 id="convHeader"></h4>
+                        </div>
+                    
+                    </div>
+                    
+                    <div id="div1" class="area">
+                        <span style="height: 10px;display:inline-block"></span>
+                        <div class="scrollbar-morpheus-den" id="msglist" style=" overflow:auto;">
+                        </div>
+                    </div>
         
-        <hr>
-        <div style="display: inline-block;
+            <hr>
+            <div style="display: inline-block;
                 margin: 0px 10px 0px 0px;">
 
             <!-- <form asp-controller="Home" id="sendForm" asp-action="SendMessage" data-ajax="true" data-ajax-method="POST">
@@ -80,10 +82,8 @@
                     <button id="sendBut" style="display: inline;" class="btn btn-primary" type="submit" formmethod="post"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </form>
-
-
+            </div>
         </div>
-    </div>
 
         
     <script>

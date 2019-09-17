@@ -11,13 +11,31 @@
 
     <p>Results found: @Model.SearchModel.Count</p>
 
-        <div class="list-group">
-            @foreach (var item in Model.SearchModel)
+    <div class="list-group">
+        @foreach (var item in Model.SearchModel)
+        {
+        <div id = @item.Id class="perItem list-group-item list-group-item-action" style="vertical-align: middle;display: table-cell;">
+
+            @if (item.Status)
             {
-                //@Html.ActionLink(item.FirstName + " " + item.LastName, "SelectConf", "Home", null, new {@id=item.Id, @class = "list-group-item list-group-item-action perItem"})
-                @Html.Label("label", item.FirstName + " " + item.LastName, new { @id = item.Id, @class = "perItem list-group-item list-group-item-action"})
+                <i class="fas fa-dot-circle fa-sm" style="color:forestgreen"></i>
+
+            }
+            else
+            {
+                <i class="fas fa-dot-circle fa-sm" style="color:darkred"></i>
             }
 
+            @Html.Label("label", item.FirstName + " " + item.LastName, new {@style = "display: inline-block", @id="choosedPerson" })
+
+
+
+
+
         </div>
+           
+        }
+
+    </div>
 
 

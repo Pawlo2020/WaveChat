@@ -63,7 +63,10 @@ namespace WaveChat.Controllers
 
             foreach (var item in SearchList)
             {
-                _chat.SearchModel.Add(new Areas.Identity.Data.WaveChatUser() { FirstName = item.FirstName, LastName = item.LastName, Id = item.Id });
+
+                bool status = _notificationsMessageHandler._communicationManager.CheckStatus(item.Id);
+
+                _chat.SearchModel.Add(new Areas.Identity.Data.WaveChatUser() { FirstName = item.FirstName, LastName = item.LastName, Id = item.Id, Status = status });
             }
 
             return PartialView("SearchContainer", _chat);

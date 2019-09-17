@@ -19,9 +19,6 @@ html {
     }
 }
 
-
-
-
 .border-top {
     border-top: 1px solid #e5e5e5;
 }
@@ -91,18 +88,38 @@ html {
 
 @media screen and (min-height: 979px) {
     #msglist {
-        height: 760px;
+        height: 730px;
         width: 95.5rem;
     }
 
     #div1 {
-        height: 760px;
+        height: 730px;
     }
 
     #inlineFormInputName {
         width: 91rem;
     }
+
+    #headingContainer{
+        width: 94.5rem;
+        background-image: linear-gradient(-90deg, #54a0ff, #00d2d3);
+        border: none;
+        color: white;
+    }
 }
+
+a.list-group-item {
+    overflow: hidden;
+    display: table;
+  }
+  
+  a.list-group-item > div {
+    display: table-cell; 
+    vertical-align: middle; 
+    float:none;
+  }
+
+
 
 
 .footer {
