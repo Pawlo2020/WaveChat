@@ -61,23 +61,17 @@ function instantiateToast(content) {
         fakeDiv.innerHTML = '<div class="toast-header" style="background-image: linear-gradient(40deg,#ff6ec4,#7873f5);"><i class="fas fa-user"></i><span style="width: 5px;"></span> <strong style="color: white;" class="mr-auto">' + msg[index]["FirstName"] + " " + msg[index]["LastName"] + '</strong><small style="color: white">' + msg[index]["Timestamp"] + '</small></div><div class="toast-body" align="left" style="background-color: #786fa6;"><span style="color: white; word-wrap: break-word;">' + msg[index]["Message"]  + '</span></div>';
         
         if(msg[index]["UserID"]==item){
-
-        
-        
-        
-        
-        document.getElementById('col1').appendChild(newDiv);
-        document.getElementById('col2').appendChild(fakeDiv);
-
+  
+            document.getElementById('col1').appendChild(newDiv);
+            document.getElementById('col2').appendChild(fakeDiv);
         
         }else{
         
-        document.getElementById('col2').appendChild(newDiv);
-        document.getElementById('col1').appendChild(fakeDiv);
+            document.getElementById('col2').appendChild(newDiv);
+            document.getElementById('col1').appendChild(fakeDiv);
         }
         $(newDiv).toast('show');
         msgdiv.scrollTop = msgdiv.scrollHeight;
-        
     };
 }
 
