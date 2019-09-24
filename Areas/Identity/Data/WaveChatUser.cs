@@ -20,7 +20,5 @@ namespace WaveChat.Areas.Identity.Data
 
         [NotMapped]
         public bool Status { get; set; }
-
-
     }
 }

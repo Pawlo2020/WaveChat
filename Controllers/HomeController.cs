@@ -123,8 +123,7 @@ namespace WaveChat.Controllers
 
             _notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).InstantiateToast = true;
         }
-
-
+        
         public void SelectConf(string ID)
         {
             var user = GetCurrentUserAsync();
@@ -145,7 +144,6 @@ namespace WaveChat.Controllers
 
             LoadMessages(_notificationsMessageHandler._communicationManager.GetSocketById(user.Result.Id).ConfGUID, user);
         }
-
 
         [Authorize]
         public IActionResult Index()

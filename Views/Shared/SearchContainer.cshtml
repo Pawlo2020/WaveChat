@@ -5,8 +5,6 @@
 
     @{ 
         Model.SearchModel = Model.SearchModel.GroupBy(x => x.Id).Select(y => y.First()).ToList();
-
-
     }
 
     <p>Results found: @Model.SearchModel.Count</p>
@@ -27,15 +25,8 @@
             }
 
             @Html.Label("label", item.FirstName + " " + item.LastName, new {@style = "display: inline-block", @id="choosedPerson" })
-
-
-
-
-
         </div>
-           
         }
-
     </div>
 
 

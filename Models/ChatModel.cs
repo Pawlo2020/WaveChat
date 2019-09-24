@@ -10,8 +10,5 @@ namespace WaveChat.Models
         public MessageModel MessageModel {get; set;}
 
         public List<WaveChat.Areas.Identity.Data.WaveChatUser> SearchModel { get; set; }
-
-
-
     }
 }
